@@ -6,6 +6,43 @@ import gsap from "gsap";
 import "./App.scss";
 
 const App = () => {
+  const sectionRef = useRef(null);
+
+  const thresholdPoint = 0.3;
+
+  const intersection = useIntersection(sectionRef, {
+    root: null,
+    // kickoff margin
+    rootMargin: "0px",
+    // render when scroll to
+    threshold: thresholdPoint
+  });
+
+  const fadeIn = (element) => {
+    gsap.to(element, 2, {
+      opacity: 1,
+      y: -60,
+      ease: 'power4.out',
+      // next animation fadeIn
+      stagger: {
+        amount: 0.4
+      }
+    })
+  }
+  const fadeOut = (element) => {
+    gsap.to(element, 2, {
+      opacity: 0,
+      y: -20,
+      ease: 'power4.out',
+    })
+  }
+
+  // pass the className
+  // pass opacity:0; to the css if do not want to fade out. ( remove fadeOut() )
+  intersection && intersection.intersectionRatio < thresholdPoint
+    ? fadeOut(".fadeIn") // Not reached
+    : fadeIn(".fadeIn") // Reached
+
   return (
     <>
       <div className='header'>
@@ -35,9 +72,13 @@ const App = () => {
           pretium.
         </p>
       </div>
-      <div className='sectionSecond'>
+
+      {/* pass the reference */}
+      <div ref={sectionRef} className='sectionSecond'>
         <div className='inner'>
+          {/* fadeIn className */}
           <h3 className='fadeIn'>The talk of what makes a champion.</h3>
+          {/* fadeIn className */}
           <p className='fadeIn'>
             Massa id neque aliquam vestibulum. Nibh praesent tristique magna
             sit. Auctor eu augue ut lectus arcu bibendum at varius. Nam aliquam
